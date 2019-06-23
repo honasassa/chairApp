@@ -16,7 +16,7 @@ import AddScreen from './screens/AddScreen';
 import FavoriteScreen from './screens/FavoriteScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import Setting1Screen from './screens/Setting1Screen';
-import Setting2Screen from './screens/Setting2Screen';
+import Setting2Screen from './screens/Setting2Screen'; 
 
 
 export default class App extends React.Component {
