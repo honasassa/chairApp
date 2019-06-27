@@ -1,22 +1,72 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { Button } from 'react-native-elements';
+import React from "react";
+import {
+  View,
+  StyleSheet
+} from "react-native";
+import { MapView, Location, Permissions } from "expo";
 
+export default class HomeScreen extends React.Component {
+  // static navigationOptions = {
+  //   header: null
+  // };
 
-class HomeScreen extends React.Component {
+  state = {
+    region: {
+      latitude: 35.6897,
+      longitude: 139.7004,
+      latitudeDelta: 0.01,
+      longitudeDelta: 0.01
+    }
+  };
+
+  async componentDidMount() {
+    await this.getLocationAsync();
+  }
+
+  getLocationAsync = async () => {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== "granted") {
+      // TODO: support not granted
+      return;
+    }
+    let location = await Location.getCurrentPositionAsync({});
+    this.setState({
+      region: {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA
+      }
+    });
+  };
+
   render() {
     return (
-      <View style={{ flex: 1, justifyContent: 'center' }}>
-        <Text>This is HomeScreen</Text>
-
-        <Button
-            title="Go to DetailScreen"
-            onPress={() => this.props.navigation.navigate('detail')}
-        />
+      <View style={styles.container}>
+        <MapView
+          style={styles.map}
+          // ref={map => {
+          //   this.map = map;
+          // }}
+          provider={"google"}
+          showsUserLocation={true}
+          showsIndoorLevelPicker={true}
+          initialRegion={this.state.region}
+          showsMyLocationButton={true}
+          showUserLocation={true}
+        >
+        </MapView>
       </View>
-    );
+    )
   }
 }
 
-
-export default HomeScreen;
+const styles = StyleSheet.create({
+  container: {
+    // backgroundColor: "#fff",
+    ...StyleSheet.absoluteFillObject
+  },
+  map: {
+    ...StyleSheet.absoluteFillObject
+  }
+});
